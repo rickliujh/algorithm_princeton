@@ -35,8 +35,8 @@ public class SocialNetworkConnectivity {
             new FakeLogFile(LocalDateTime.of(1993, 5, 23, 23, 34).toEpochSecond(ZoneOffset.UTC), 1, 4),
             new FakeLogFile(LocalDateTime.of(1997, 11, 11, 1, 14).toEpochSecond(ZoneOffset.UTC), 3, 5),
             new FakeLogFile(LocalDateTime.of(1998, 2, 27, 14, 35).toEpochSecond(ZoneOffset.UTC), 6, 3),
-            new FakeLogFile(LocalDateTime.of(1998, 9, 21, 19, 22).toEpochSecond(ZoneOffset.UTC), 1, 2),
-            new FakeLogFile(LocalDateTime.of(2003, 10, 30, 5, 57).toEpochSecond(ZoneOffset.UTC), 5, 2), // here
+            new FakeLogFile(LocalDateTime.of(1998, 9, 21, 19, 22).toEpochSecond(ZoneOffset.UTC), 1, 2), // here
+            new FakeLogFile(LocalDateTime.of(2003, 10, 30, 5, 57).toEpochSecond(ZoneOffset.UTC), 5, 2),
             new FakeLogFile(LocalDateTime.of(2005, 5, 1, 3, 50).toEpochSecond(ZoneOffset.UTC), 1, 5),
             new FakeLogFile(LocalDateTime.of(2008, 9, 15, 21, 21).toEpochSecond(ZoneOffset.UTC), 3, 4),
             new FakeLogFile(LocalDateTime.of(2008, 4, 16, 23, 45).toEpochSecond(ZoneOffset.UTC), 1, 6),
