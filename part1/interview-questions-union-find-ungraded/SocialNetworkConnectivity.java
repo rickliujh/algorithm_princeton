@@ -5,7 +5,7 @@
  * time at which all members are connected (i.e., every member is a friend of a
  * friend of a friend ... of a friend). Assume that the log file is sorted by
  * timestamp and that friendship is an equivalence relation. The running time of
- * your algorithm should be log ⁡ mlogn or better and use extra space
+ * your algorithm should be mlogn or better and use extra space
  * proportional to n. Note: these interview questions are ungraded and purely
  * for your own enrichment. To get a hint, submit a solution. 1 point
  */
@@ -62,22 +62,32 @@ public class SocialNetworkConnectivity {
 
     };
 
-    static class QuickUnion {
+    static class CountedQuickUnion {
+        int total;
         static int[] items;
+        static int[] connectionCount;
 
-        public QuickUnion(int total) {
+        public CountedQuickUnion(int total) {
+            this.total = total;
             items = new int[total + 1];
+            connectionCount = new int[total + 1];
             for (int i = 0; i < items.length; i++) {
                 items[i] = i;
+                connectionCount[i] = 0;
             }
         }
 
         public void connect(int a, int b) {
-            items[a] = b;
+            connectionCount[root(b)] += (connectionCount[root(a)] + 1);
+            items[a] = root(b);
         }
 
         public boolean isConnect(int a, int b) {
             return root(a) == root(b);
+        }
+
+        public boolean isAllConnected() {
+            return connectionCount[root(1)] >= (total - 1);
         }
 
         private int root(int node) {
@@ -89,17 +99,38 @@ public class SocialNetworkConnectivity {
         }
     }
 
+    public static String toStringFromTimestampLong(long timestamp) {
+        return LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC).toString();
+    }
+
+    public static void printArray(int[] array) {
+        String result = "";
+        for (int i = 0; i < array.length; i++) {
+            result += array[i] + " ";
+        }
+        System.out.println(result);
+    }
+
     public static void main(String[] args) {
-        QuickUnion qu = new QuickUnion(logFile.length);
+        CountedQuickUnion cqu = new CountedQuickUnion(members.length);
+
         for (int i = 0; i < logFile.length; i++) {
+            // System.out.printf("%s, %s, %s\n", logFile[i].timestamp,
+            // logFile[i].connections[0],
+            // logFile[i].connections[1]);
 
-            System.out.printf("%s, %s, %s\n", logFile[i].timestamp, logFile[i].connections[0],
-                    logFile[i].connections[1]);
+            int[] conns = logFile[i].connections;
+            cqu.connect(conns[0], conns[1]);
 
-            var conns = logFile[i].connections;
-            qu.connect(conns[0], conns[1]);
+            // printArray(cqu.items);
+            // printArray(cqu.connectionCount);
 
-            System.out.printf("is %s connect to %s? %s\n", "1", "6", qu.isConnect(1, 6));
+            if (cqu.isAllConnected()) {
+                System.out.println("earlier time that all members connected is:"
+                        + toStringFromTimestampLong(logFile[i].timestamp));
+                return;
+            }
+            // System.out.printf("is %s connect to %s? %s\n", "1", "6", qu.isConnect(1, 6));
         }
     }
 }
