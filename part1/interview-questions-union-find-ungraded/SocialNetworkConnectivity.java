@@ -83,6 +83,7 @@ public class SocialNetworkConnectivity {
             if (i == j)
                 return;
 
+            // weight the tree
             if (sz[i] < sz[j]) {
                 items[a] = j;
                 sz[j] += sz[i];
@@ -103,7 +104,7 @@ public class SocialNetworkConnectivity {
         private int root(int node) {
             int i = node;
             while (items[i] != i) {
-                items[i] = items[items[i]];
+                items[i] = items[items[i]]; // path compression
                 i = items[i];
             }
             return i;
