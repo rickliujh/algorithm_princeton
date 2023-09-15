@@ -65,25 +65,30 @@ public class SocialNetworkConnectivity {
     static class WeightedQuickUnion {
         int total;
         static int[] items;
-        static int[] connectednodes;
+        static int[] sz;
 
         public WeightedQuickUnion(int total) {
             this.total = total;
             items = new int[total + 1];
-            connectednodes = new int[total + 1];
+            sz = new int[total + 1];
             for (int i = 0; i < items.length; i++) {
                 items[i] = i;
-                connectednodes[i] = 0;
+                sz[i] = 1;
             }
         }
 
         public void connect(int a, int b) {
-            if (connectednodes[root(a)] <= connectednodes[root(b)]) {
-                items[a] = root(b);
-                connectednodes[root(b)] += (connectednodes[root(a)] + 1);
+            int i = root(a);
+            int j = root(b);
+            if (i == j)
+                return;
+
+            if (sz[i] < sz[j]) {
+                items[a] = j;
+                sz[j] += sz[i];
             } else {
-                items[b] = root(a);
-                connectednodes[root(a)] += (connectednodes[root(b)] + 1);
+                items[b] = i;
+                sz[i] += sz[j];
             }
         }
 
@@ -92,7 +97,7 @@ public class SocialNetworkConnectivity {
         }
 
         public boolean isAllConnected() {
-            return connectednodes[root(1)] >= (total - 1);
+            return sz[root(1)] >= total;
         }
 
         private int root(int node) {
@@ -129,7 +134,7 @@ public class SocialNetworkConnectivity {
             cqu.connect(conns[0], conns[1]);
 
             // printArray(cqu.items);
-            // printArray(cqu.connectionCount);
+            // printArray(cqu.sz);
 
             if (cqu.isAllConnected()) {
                 System.out.println("earlier time that all members connected is:"
