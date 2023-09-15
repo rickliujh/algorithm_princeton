@@ -62,24 +62,29 @@ public class SocialNetworkConnectivity {
 
     };
 
-    static class CountedQuickUnion {
+    static class WeightedQuickUnion {
         int total;
         static int[] items;
-        static int[] connectionCount;
+        static int[] connectednodes;
 
-        public CountedQuickUnion(int total) {
+        public WeightedQuickUnion(int total) {
             this.total = total;
             items = new int[total + 1];
-            connectionCount = new int[total + 1];
+            connectednodes = new int[total + 1];
             for (int i = 0; i < items.length; i++) {
                 items[i] = i;
-                connectionCount[i] = 0;
+                connectednodes[i] = 0;
             }
         }
 
         public void connect(int a, int b) {
-            connectionCount[root(b)] += (connectionCount[root(a)] + 1);
-            items[a] = root(b);
+            if (connectednodes[root(a)] <= connectednodes[root(b)]) {
+                items[a] = root(b);
+                connectednodes[root(b)] += (connectednodes[root(a)] + 1);
+            } else {
+                items[b] = root(a);
+                connectednodes[root(a)] += (connectednodes[root(b)] + 1);
+            }
         }
 
         public boolean isConnect(int a, int b) {
@@ -87,15 +92,16 @@ public class SocialNetworkConnectivity {
         }
 
         public boolean isAllConnected() {
-            return connectionCount[root(1)] >= (total - 1);
+            return connectednodes[root(1)] >= (total - 1);
         }
 
         private int root(int node) {
-            int curr = node;
-            while (items[curr] != curr) {
-                curr = items[curr];
+            int i = node;
+            while (items[i] != i) {
+                items[i] = items[items[i]];
+                i = items[i];
             }
-            return curr;
+            return i;
         }
     }
 
@@ -112,7 +118,7 @@ public class SocialNetworkConnectivity {
     }
 
     public static void main(String[] args) {
-        CountedQuickUnion cqu = new CountedQuickUnion(members.length);
+        WeightedQuickUnion cqu = new WeightedQuickUnion(members.length);
 
         for (int i = 0; i < logFile.length; i++) {
             // System.out.printf("%s, %s, %s\n", logFile[i].timestamp,
